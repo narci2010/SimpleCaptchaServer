@@ -2,8 +2,8 @@
   <library name="Maven: ch.qos.logback:logback-classic:1.1.1">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.1.1/logback-classic-1.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/simplecaptcha-1.2.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jave-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/simplecaptcha-1.2.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

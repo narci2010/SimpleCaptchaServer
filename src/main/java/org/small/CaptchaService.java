@@ -1,6 +1,8 @@
 package org.small;
 
+import it.sauronsoftware.jave.AudioAttributes;
 import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncodingAttributes;
 import nl.captcha.Captcha;
 import nl.captcha.audio.AudioCaptcha;
 import nl.captcha.gimpy.BlockGimpyRenderer;
@@ -16,13 +18,20 @@ import org.small.model.Result;
 import org.small.utils.EasyCharTextProducer;
 import org.small.utils.FixedWordRenderer;
 import org.small.utils.StringUtils;
+import org.small.utils.TimeUtils;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CaptchaService 生成验证码操作
@@ -69,44 +78,98 @@ public class CaptchaService {
             }
             Captcha captcha = null;
             AudioCaptcha audioCaptcha = null;
-            if (CaptchaConstants.CHS.equals(catchaStyle)) {
-                captcha = this.getChsCaptcha(width, height, captchaLength);
+            if (CaptchaConstants.MP3.equals(outputType) || CaptchaConstants.WAV.equals(outputType)) {
+                //音频验证码处理
+                audioCaptcha = this.getAudioCaptcha(outputType);
             } else {
-                if (CaptchaConstants.MP3.equals(catchaStyle) || CaptchaConstants.WAV.equals(catchaStyle)) {
-                    audioCaptcha = this.getAudioCaptcha(outputType);
+                if (CaptchaConstants.CHS.equals(catchaStyle)) {
+                    //汉字处理
+                    captcha = this.getChsCaptcha(width, height, captchaLength);
                 } else {
+                    //英文数字处理
                     captcha = this.getDefaultCaptcha(width, height, captchaLength, catchaStyle);
                 }
             }
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] bts = null;
             String strRand = "";
-            if (!CaptchaConstants.MP3.equals(catchaStyle) && !CaptchaConstants.WAV.equals(catchaStyle)) {
+            // 音频文件处理
+            if (CaptchaConstants.MP3.equals(outputType) || CaptchaConstants.WAV.equals(outputType)) {
                 strRand = audioCaptcha.getAnswer();
                 AudioSystem.write(audioCaptcha.getChallenge().getAudioInputStream(),
                         AudioFileFormat.Type.WAVE, bos);
-
+//                buffer.array()
+                if ("mp3".equals(outputType)) {
+                    String sorceFileName = TimeUtils.getDifTime() + "";
+                    String targetFileName = TimeUtils.getDifTime() + "";
+                    FileOutputStream fileOutputStream = new FileOutputStream(new File(sorceFileName + ".wav"));
+                    fileOutputStream.write(bos.toByteArray());
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    File sourceFile = new File(sorceFileName + ".wav");
+                    File targetFile = new File(targetFileName + ".mp3");
+                    execute(sourceFile, targetFileName + ".mp3");
+                    FileInputStream fileInputStream = new FileInputStream(targetFile);
+                    byte[] buf = new byte[256];
+                    int len = -1;
+                    ByteBuffer buffer = ByteBuffer.allocate((int) targetFile.length());
+                    while ((len = fileInputStream.read(buf)) != -1) {
+                        buffer.put(buf, 0, len);
+                    }
+                    fileInputStream.close();
+                    fileOutputStream.close();
+                    sourceFile.delete();
+                    targetFile.delete();
+                    bts = buffer.array();
+                } else if ("wav".equals(outputType)) {
+                    bts = bos.toByteArray();
+                } else {
+                    throw new RuntimeException("只能支持map3和wav格式的音频");
+                }
+                strRand = audioCaptcha.getAnswer();
             } else {
-                //图片处理
-                ImageIO.write(captcha.getImage(), outputType, bos);
+//                图片文件处理
                 strRand = captcha.getAnswer();
+                ImageIO.write(captcha.getImage(), outputType, bos);
                 bts = bos.toByteArray();
             }
-
             BASE64Encoder encoder = new BASE64Encoder();
-            LOGGER.debug("创建验证码图片中,计算后的验证码Base64码为：" + encoder.encode(bts));
+            LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
             returnMap.put("captcha_base64", encoder.encode(bts));
             returnMap.put("answer", strRand);
             returnMap.put("media_type", outputType);
-            LOGGER.debug("创建验证码图片中,计算后的随机验证码为：" + strRand);
-        } catch (IOException e) {
+            LOGGER.debug("创建验证码中,计算后的随机验证码为：" + strRand);
+        } catch (Exception e) {
             returnMap.put("code", "400");
-            returnMap.put("name", "生成图片验证码出错");
-            LOGGER.error("创建验证码图片出错：" + e.getMessage());
+            returnMap.put("name", "生成验证码出错");
+            LOGGER.error("创建验证码出错：" + e.getMessage());
             return Result.error("获取验证码失败", returnMap);
         }
-        LOGGER.debug("成功创建验证码图片结束");
+        LOGGER.debug("成功创建验证码结束");
         return Result.ok("获取验证码成功", returnMap);
+    }
+
+    /**
+     * 执行转化过程
+     *
+     * @param source      源文件
+     * @param desFileName 目标文件名
+     * @return 转化后的文件
+     */
+    public static File execute(File source, String desFileName)
+            throws Exception {
+        File target = new File(desFileName);
+        AudioAttributes audio = new AudioAttributes();
+        audio.setCodec("libmp3lame");
+        audio.setBitRate(new Integer(36000)); //音频比率 MP3默认是1280000
+        audio.setChannels(new Integer(2));
+        audio.setSamplingRate(new Integer(44100));
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setFormat("mp3");
+        attrs.setAudioAttributes(audio);
+        Encoder encoder = new Encoder();
+        encoder.encode(source, target, attrs);
+        return target;
     }
 
     /**
@@ -115,36 +178,8 @@ public class CaptchaService {
      * @return
      */
     public AudioCaptcha getAudioCaptcha(String outputType) {
-        AudioCaptcha captcha = new AudioCaptcha.Builder().addAnswer().addVoice().addNoise().build(); // Required
-//            FileOutputStream fileOutputStream = new FileOutputStream(new File("C:\\Users\\angelo\\Desktop\\123.wav"));
-//            fileOutputStream.write(baos.toByteArray());
-//            fileOutputStream.flush();
-//            fileOutputStream.close();
-       return captcha;
-    }
-
-    public byte[] convertWavToMp3(byte[] source){
-        try{
-
-            FileOutputStream fileOutputStream = new FileOutputStream(new File("123.wav"));
-            fileOutputStream.write(source);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            File target = new File(desFileName);
-            AudioAttributes audio = new AudioAttributes();
-            audio.setCodec("libmp3lame");
-            audio.setBitRate(new Integer(36000)); //音频比率 MP3默认是1280000
-            audio.setChannels(new Integer(2));
-            audio.setSamplingRate(new Integer(44100));
-            EncodingAttributes attrs = new EncodingAttributes();
-            attrs.setFormat("mp3");
-            attrs.setAudioAttributes(audio);
-            Encoder encoder = new Encoder();
-            encoder.encode(source, target, attrs);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return ;
+        AudioCaptcha captcha = new AudioCaptcha.Builder().addAnswer().addVoice().addNoise().build();
+        return captcha;
     }
 
     /**
@@ -191,7 +226,7 @@ public class CaptchaService {
     public static void main(String[] args) {
         CaptchaService captchaService = new CaptchaService();
         try {
-            captchaService.createSimpleCode(140, 40, 5, "mp3", "png");
+            captchaService.createSimpleCode(140, 40, 5, "wav", "wav");
         } catch (Exception excption) {
             excption.printStackTrace();
         }

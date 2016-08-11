@@ -8,5 +8,17 @@ package org.small.utils;
  */
 public class TimeUtils {
 
-    public long synchronized getDifTime
+    /**
+     * 获取不一样的毫秒数
+     *
+     * @return
+     */
+    public static synchronized long getDifTime() {
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+        } finally {
+            return System.currentTimeMillis();
+        }
+    }
 }

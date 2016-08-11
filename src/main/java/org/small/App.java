@@ -40,10 +40,6 @@ public class App extends NanoHTTPD {
                 httpParms.get("style").toString(),
                 httpParms.get("output").toString());
         String returnMsg = JSONObject.toJSONString(result, SerializerFeature.BrowserCompatible);
-        try {
-            returnMsg = URLDecoder.decode(returnMsg,"utf-8");
-        } catch (UnsupportedEncodingException e) {
-        }
         return newFixedLengthResponse(returnMsg);
     }
 }

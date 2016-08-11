@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="SimpleCaptchaServer:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="SimpleCaptchaServer.jar">
+      <element id="module-output" name="SimpleCaptchaServer" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.6/commons-codec-1.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/alibaba/fastjson/1.2.7/fastjson-1.2.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/googlecode/soundlibs/mp3spi/1.9.5-1/mp3spi-1.9.5-1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.1.1/logback-classic-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jave-1.0.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/simplecaptcha-1.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/googlecode/soundlibs/tritonus-share/0.3.7-1/tritonus-share-0.3.7-1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/googlecode/soundlibs/jlayer/1.0.1-1/jlayer-1.0.1-1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/nanohttpd/nanohttpd/2.2.0/nanohttpd-2.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.6/slf4j-api-1.7.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/ch/qos/logback/logback-core/1.1.1/logback-core-1.1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
