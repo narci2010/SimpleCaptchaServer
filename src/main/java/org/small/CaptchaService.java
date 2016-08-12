@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.small.model.CaptchaConstants;
 import org.small.model.CaptchaData;
 import org.small.model.Result;
-import org.small.utils.EasyCharTextProducer;
-import org.small.utils.FixedWordRenderer;
-import org.small.utils.StringUtils;
-import org.small.utils.TimeUtils;
+import org.small.utils.*;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -61,23 +58,23 @@ public class CaptchaService {
             // randomCode记录随机产生的验证码
             // 默认图片的长度为120*40
             if (width == 0 || height == 0) {
-                width = 120;
-                height = 40;
+                width = PropertiesUtils.getWIDTH();
+                height = PropertiesUtils.getHEIGHT();
             }
 
             // 默认随机英文加字幕
             if (StringUtils.isEmpty(catchaStyle)) {
-                catchaStyle = CaptchaConstants.ENG;
+                catchaStyle = PropertiesUtils.getSTYLE();
             }
 
             // 不符合条件的条件进行过滤，默认为4
             if (captchaLength == 0 || captchaLength > 7 || captchaLength < 0) {
-                captchaLength = 4;
+                captchaLength = PropertiesUtils.getLEN();
             }
 
             // 默认为图形为 jpg格式
             if (StringUtils.isEmpty(outputType)) {
-                outputType = CaptchaConstants.OUTPUT_TYPE;
+                outputType = PropertiesUtils.getOUTPUT();
             }
             Captcha captcha = null;
             AudioCaptcha audioCaptcha = null;
