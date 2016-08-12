@@ -1,5 +1,9 @@
 package org.small.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import sun.misc.BASE64Encoder;
+
 /**
  * TimeUtils
  *
@@ -20,5 +24,19 @@ public class TimeUtils {
         } finally {
             return System.currentTimeMillis();
         }
+    }
+
+    public static void main(String[] args) {
+        String jiang = "jaijsidjfaisjf\\/]as..;";
+        BASE64Encoder encoder = new BASE64Encoder();
+        System.out.println(encoder.encode(jiang.getBytes()));
+        ObjectMapper mapperObj = new ObjectMapper();
+        String returnMsg = "";
+        try {
+            returnMsg = mapperObj.writeValueAsString(jiang.getBytes());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(returnMsg);
     }
 }

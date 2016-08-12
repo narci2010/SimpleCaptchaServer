@@ -10,6 +10,7 @@ import nl.captcha.gimpy.FishEyeGimpyRenderer;
 import nl.captcha.text.producer.DefaultTextProducer;
 import nl.captcha.text.renderer.ColoredEdgesWordRenderer;
 import nl.captcha.text.renderer.WordRenderer;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.small.model.CaptchaConstants;
@@ -23,11 +24,12 @@ import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.awt.*;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +56,7 @@ public class CaptchaService {
     public Result createSimpleCode(int width, int height, int captchaLength, String catchaStyle, String outputType) {
         LOGGER.debug("开始创建验证码图片,宽度为：" + width + ",高度：" + height + ",验证码长度" + captchaLength + ",验证码格式类型" + catchaStyle + ",验证码输出类型" + outputType);
         Map<String, String> returnMap = new HashMap<String, String>();
+        JSONObject jsonObject = new JSONObject();
         try {
             // randomCode记录随机产生的验证码
             // 默认图片的长度为120*40
@@ -143,10 +146,10 @@ public class CaptchaService {
             returnMap.put("code", "400");
             returnMap.put("name", "生成验证码出错");
             LOGGER.error("创建验证码出错：" + e.getMessage());
-            return Result.error("获取验证码失败", returnMap);
+            return Result.error(returnMap);
         }
         LOGGER.debug("成功创建验证码结束");
-        return Result.ok("获取验证码成功", returnMap);
+        return Result.ok(returnMap);
     }
 
     /**

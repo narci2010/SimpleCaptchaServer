@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="SimpleCaptchaServer:jar">
-    <output-path>$USER_HOME$/Desktop</output-path>
+    <output-path>$USER_HOME$/Desktop/SimpleCaptcha.jar</output-path>
     <root id="archive" name="SimpleCaptchaServer.jar">
       <element id="module-output" name="SimpleCaptchaServer" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.6/commons-codec-1.6.jar" path-in-jar="/" />

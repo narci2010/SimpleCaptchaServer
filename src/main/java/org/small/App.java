@@ -1,14 +1,11 @@
 package org.small;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import fi.iki.elonen.NanoHTTPD;
 import org.small.model.Result;
 import org.small.utils.StringUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Map;
 
 /**
@@ -16,7 +13,7 @@ import java.util.Map;
  */
 public class App extends NanoHTTPD {
     public App() throws IOException {
-        super(8080);
+        super(8181);
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
     }
 
@@ -39,7 +36,7 @@ public class App extends NanoHTTPD {
         Result result = captchaService.createSimpleCode(width, height, len,
                 httpParms.get("style").toString(),
                 httpParms.get("output").toString());
-        String returnMsg = JSONObject.toJSONString(result, SerializerFeature.BrowserCompatible);
-        return newFixedLengthResponse(returnMsg);
+        String returnMsg = JSONObject.toJSONString(result);
+        return newFixedLengthResponse(returnMsg.replace("\\r\\n",""));
     }
 }

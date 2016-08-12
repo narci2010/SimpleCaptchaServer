@@ -1,7 +1,5 @@
 package org.small.model;
 
-import org.small.utils.StringUtils;
-
 /**
  * Result 返回实体类Model
  *
@@ -10,40 +8,29 @@ import org.small.utils.StringUtils;
  */
 public class Result {
 
-    private String success;
-
-    private String message;
+    private boolean success;
 
     private Object data;
 
-    public static Result ok(String message, Object data) {
+    public static Result ok(Object data) {
         Result r = new Result();
-        r.success = "0";
-        r.message = message;
+        r.success = true;
         r.data = data;
         return r;
     }
 
-    public static Result error(String message, Object data) {
+    public static Result error( Object data) {
         Result r = new Result();
-        r.success = "1";
-        r.message = message;
+        r.success = false;
         r.data = data;
         return r;
     }
 
-    public static Result noAuth() {
-        Result r = new Result();
-        r.success = "2";
-        r.message = StringUtils.string2Unicode("Forbidden");
-        return r;
-    }
-
-    public String getSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 
-    public void setSuccess(String success) {
+    public void setSuccess(boolean success) {
         this.success = success;
     }
 
@@ -53,13 +40,5 @@ public class Result {
 
     public void setData(Object data) {
         this.data = data;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
