@@ -11,5 +11,4 @@ public interface CaptchaConstants {
     String CHS = "chs";
     String MP3 = "mp3";
     String WAV = "wav";
-    String OUTPUT_TYPE = "png";
 }

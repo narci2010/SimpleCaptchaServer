@@ -10,11 +10,10 @@ import nl.captcha.gimpy.FishEyeGimpyRenderer;
 import nl.captcha.text.producer.DefaultTextProducer;
 import nl.captcha.text.renderer.ColoredEdgesWordRenderer;
 import nl.captcha.text.renderer.WordRenderer;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.small.model.CaptchaConstants;
-import org.small.model.CaptchaData;
+import org.small.model.ChsCaptchaData;
 import org.small.model.Result;
 import org.small.utils.*;
 import sun.misc.BASE64Encoder;
@@ -53,7 +52,6 @@ public class CaptchaService {
     public Result createSimpleCode(int width, int height, int captchaLength, String catchaStyle, String outputType) {
         LOGGER.debug("开始创建验证码图片,宽度为：" + width + ",高度：" + height + ",验证码长度" + captchaLength + ",验证码格式类型" + catchaStyle + ",验证码输出类型" + outputType);
         Map<String, String> returnMap = new HashMap<String, String>();
-        JSONObject jsonObject = new JSONObject();
         try {
             // randomCode记录随机产生的验证码
             // 默认图片的长度为120*40
@@ -134,7 +132,7 @@ public class CaptchaService {
                 bts = bos.toByteArray();
             }
             BASE64Encoder encoder = new BASE64Encoder();
-//            LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
+            LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
             returnMap.put("captcha_base64", encoder.encode(bts));
             returnMap.put("answer", strRand);
             returnMap.put("media_type", outputType);
@@ -201,7 +199,7 @@ public class CaptchaService {
         colorList.add(Color.blue);
         ColoredEdgesWordRenderer cwr = new ColoredEdgesWordRenderer(colorList, fontList);
         WordRenderer wr = cwr;
-        builder.addText(new DefaultTextProducer(captchaLength, CaptchaData.baseChsCaptcha.toCharArray()), wr);
+        builder.addText(new DefaultTextProducer(captchaLength, ChsCaptchaData.baseChsCaptcha.toCharArray()), wr);
         builder.gimp(new BlockGimpyRenderer(1));
         Captcha captcha = builder.build();
         return captcha;
