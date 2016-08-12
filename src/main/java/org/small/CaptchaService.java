@@ -137,7 +137,7 @@ public class CaptchaService {
                 bts = bos.toByteArray();
             }
             BASE64Encoder encoder = new BASE64Encoder();
-            LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
+//            LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
             returnMap.put("captcha_base64", encoder.encode(bts));
             returnMap.put("answer", strRand);
             returnMap.put("media_type", outputType);

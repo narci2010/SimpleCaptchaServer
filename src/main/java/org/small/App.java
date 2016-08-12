@@ -3,6 +3,7 @@ package org.small;
 import com.alibaba.fastjson.JSONObject;
 import fi.iki.elonen.NanoHTTPD;
 import org.small.model.Result;
+import org.small.utils.PropertiesUtils;
 import org.small.utils.StringUtils;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 public class App extends NanoHTTPD {
     public App() throws IOException {
-        super(8181);
+        super(PropertiesUtils.getAPP_PORT());
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
     }
 
@@ -27,7 +28,6 @@ public class App extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-//        http://localhost:8080/?username=11
         Map<String, String> httpParms = session.getParms();
         CaptchaService captchaService = new CaptchaService();
         int width = StringUtils.isEmpty(httpParms.get("width").toString()) ? 0 : Integer.parseInt(httpParms.get("width").toString());
