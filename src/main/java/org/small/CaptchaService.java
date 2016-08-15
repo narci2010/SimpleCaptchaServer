@@ -13,7 +13,6 @@ import nl.captcha.text.renderer.WordRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.small.model.CaptchaConstants;
-import org.small.model.ChsCaptchaData;
 import org.small.model.Result;
 import org.small.utils.*;
 import sun.misc.BASE64Encoder;
@@ -74,6 +73,11 @@ public class CaptchaService {
             if (StringUtils.isEmpty(outputType)) {
                 outputType = PropertiesUtils.getOUTPUT();
             }
+
+            if (!outputType.equals(CaptchaConstants.WAV) || !outputType.equals(CaptchaConstants.MP3) || !outputType.equals(CaptchaConstants.GIF) || !outputType.equals(CaptchaConstants.JPG) || !outputType.equals(CaptchaConstants.PNG)) {
+                outputType = PropertiesUtils.getOUTPUT();
+            }
+
             Captcha captcha = null;
             AudioCaptcha audioCaptcha = null;
             if (CaptchaConstants.MP3.equals(outputType) || CaptchaConstants.WAV.equals(outputType)) {
@@ -134,7 +138,11 @@ public class CaptchaService {
             BASE64Encoder encoder = new BASE64Encoder();
             LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
             returnMap.put("captcha_base64", encoder.encode(bts));
-            returnMap.put("answer", strRand);
+            if (catchaStyle.equals(CaptchaConstants.CHS)) {
+                returnMap.put("answer", StringUtils.string2Unicode(strRand).replace("\\\\", "\\"));
+            } else {
+                returnMap.put("answer", strRand);
+            }
             returnMap.put("media_type", outputType);
             LOGGER.debug("创建验证码中,计算后的随机验证码为：" + strRand);
         } catch (Exception e) {
@@ -199,7 +207,7 @@ public class CaptchaService {
         colorList.add(Color.blue);
         ColoredEdgesWordRenderer cwr = new ColoredEdgesWordRenderer(colorList, fontList);
         WordRenderer wr = cwr;
-        builder.addText(new DefaultTextProducer(captchaLength, ChsCaptchaData.baseChsCaptcha.toCharArray()), wr);
+        builder.addText(new DefaultTextProducer(captchaLength, PropertiesUtils.getChsCaptcha().toCharArray()), wr);
         builder.gimp(new BlockGimpyRenderer(1));
         Captcha captcha = builder.build();
         return captcha;

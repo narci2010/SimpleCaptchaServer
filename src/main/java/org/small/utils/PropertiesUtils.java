@@ -42,6 +42,12 @@ public class PropertiesUtils {
      */
     private static String OUTPUT;
 
+    private static String CHS_CAPTCHA;
+
+    public static String getChsCaptcha() {
+        return CHS_CAPTCHA;
+    }
+
     static {
         Properties prop = new Properties();
         InputStream in = PropertiesUtils.class.getResourceAsStream("/app.properties");
@@ -53,6 +59,7 @@ public class PropertiesUtils {
             LEN = Integer.parseInt(prop.getProperty("len").trim());
             STYLE = prop.getProperty("catchaStyle").trim();
             OUTPUT = prop.getProperty("outputType").trim();
+            CHS_CAPTCHA = prop.getProperty("baseChsCaptcha").trim();
         } catch (IOException e) {
         }
     }
