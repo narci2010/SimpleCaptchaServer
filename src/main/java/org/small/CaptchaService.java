@@ -49,7 +49,7 @@ public class CaptchaService {
      * @return
      */
     public Result createSimpleCode(int width, int height, int captchaLength, String catchaStyle, String outputType) {
-        LOGGER.debug("开始创建验证码图片,宽度为：" + width + ",高度：" + height + ",验证码长度" + captchaLength + ",验证码格式类型" + catchaStyle + ",验证码输出类型" + outputType);
+        LOGGER.info("开始创建验证码图片,宽度为：" + width + ",高度：" + height + ",验证码长度" + captchaLength + ",验证码格式类型" + catchaStyle + ",验证码输出类型" + outputType);
         Map<String, String> returnMap = new HashMap<String, String>();
         try {
             // randomCode记录随机产生的验证码
@@ -136,7 +136,7 @@ public class CaptchaService {
                 bts = bos.toByteArray();
             }
             BASE64Encoder encoder = new BASE64Encoder();
-            LOGGER.debug("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
+            LOGGER.info("创建验证码中,计算后的验证码Base64码为：" + encoder.encode(bts));
             returnMap.put("captcha_base64", encoder.encode(bts));
             if (catchaStyle.equals(CaptchaConstants.CHS)) {
                 returnMap.put("answer", StringUtils.string2Unicode(strRand).replace("\\\\", "\\"));
@@ -144,14 +144,15 @@ public class CaptchaService {
                 returnMap.put("answer", strRand);
             }
             returnMap.put("media_type", outputType);
-            LOGGER.debug("创建验证码中,计算后的随机验证码为：" + strRand);
+            LOGGER.info("创建验证码中,计算后的随机验证码为：" + strRand);
         } catch (Exception e) {
             returnMap.put("code", "400");
             returnMap.put("name", "生成验证码出错");
-            LOGGER.error("创建验证码出错：" + e.getMessage());
+            String errorString = LogUtilFormat.getFormatMessage("创建验证码出错：",e);
+            LOGGER.error(errorString);
             return Result.error(returnMap);
         }
-        LOGGER.debug("成功创建验证码结束");
+        LOGGER.info("成功创建验证码结束");
         return Result.ok(returnMap);
     }
 

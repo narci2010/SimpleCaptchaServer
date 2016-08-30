@@ -1,5 +1,8 @@
 package org.small.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * TimeUtils
  *
@@ -20,5 +23,11 @@ public class TimeUtils {
         } finally {
             return System.currentTimeMillis();
         }
+    }
+
+    public static String formatDateTime2(Date date) {
+        SimpleDateFormat sFormat = new SimpleDateFormat();
+        sFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
+        return sFormat.format(date);
     }
 }
